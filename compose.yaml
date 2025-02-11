@@ -1,0 +1,25 @@
+services:
+  db: #use docker debug in terminal to get a docker console inside the container
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5433:5432"
+## use when you want to dockerize youre next js app
+#  app:
+#    build:
+#      context: .
+#    image: nextjs-dev
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      NODE_ENV: development
+#    develop: #use docker compose up --watch
+#      watch:
+#        - action: sync
+#          path: ./src
+#          target: /app/src
+#          ignore:
+#            - node_modules/
+#        - action: rebuild
+#          path: package.json
