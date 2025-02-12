@@ -8,7 +8,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+debugger
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -16,6 +16,7 @@ export default function RegisterPage() {
     });
 
     if (!res.ok) {
+      console.log(res)
       const data = await res.json();
       setError(data.error || "Registration failed");
       return;

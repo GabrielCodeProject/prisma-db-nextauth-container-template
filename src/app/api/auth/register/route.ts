@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/db";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+import { log } from "console";
 
 export async function POST(req: Request) {
   try {
+  debugger
+    log(req);
     const { name, email, password } = await req.json();
 
     // Validate input
