@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/db";
 import bcrypt from "bcryptjs";
-import { log } from "console";
 
 export async function POST(req: Request) {
   try {
   debugger
-    log(req);
+    console.log("la register request: ", req);
     const { name, email, password } = await req.json();
 
     // Validate input

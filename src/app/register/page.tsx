@@ -34,21 +34,21 @@ debugger
         <input
           type="text"
           placeholder="Name"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border text-black rounded"
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
         />
         <input
           type="email"
           placeholder="Email"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border text-black rounded"
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border text-black rounded"
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />

@@ -1,19 +1,18 @@
-import { addTask, addUser } from "../actions/actions";
+import { addUser } from "../actions/actions";
 import prisma from "@/app/lib/db";
+import { getServerSession } from "next-auth/next";
+import { GET as handlerGet } from "./api/auth/[...nextauth]/route";
+import { authOptions} from "@/app/api/auth/[...nextauth]/route";
+
 
 export default async function Home() {
-  //prisma client
+  const session = await getServerSession(authOptions.session);
+  console.log("Session from Home:", session);
+  if (!session) {
+    return <div>Not authenticated</div>;
+  }
   const users = await prisma.user.findMany();
-  //  const tasks = [
-  //    {
-  //      id: 1,
-  //      name: "task 1",
-  //    },
-  //    {
-  //      id: 2,
-  //      name: "task 2",
-  //    },
-  //  ];
+
   return (
     <div className="flex flex-col flex-wrap items-center bg-white min-h-screen">
       <h1 className="text-black">Tasks:</h1>

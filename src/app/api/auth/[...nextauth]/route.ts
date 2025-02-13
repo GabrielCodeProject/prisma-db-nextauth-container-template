@@ -5,12 +5,32 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../lib/db";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth/next";
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, User as NextAuthUser } from "next-auth";
+
+declare module "next-auth" {
+  interface User extends NextAuthUser {
+    id: string;
+    role?: string;
+  }
+
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      role?: string;
+    };
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "database",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+
   },
   providers: [
     // Credentials provider for email & password authentication
@@ -35,7 +55,6 @@ export const authOptions: NextAuthOptions = {
         return null;
       },
     }),
-    // Google provider (requires proper env variables)
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -43,6 +62,8 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, user }) {
+      console.log("where are you",session)
+      console.log("where are you",user)
       if (session.user && user.role) {
         session.user.id = user.id;
         session.user.role = user.role;
@@ -51,7 +72,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === "development",
+  debug: true,
 };
 
 const handler = NextAuth(authOptions);

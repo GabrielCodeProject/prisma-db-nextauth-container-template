@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { GET as handlerGet} from "@/app/api/auth/[...nextauth]/route";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -9,13 +10,15 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    debugger;
 
     const res = await signIn("credentials", {
-      redirect: false,
       email: form.email,
       password: form.password,
-    });
+      redirect: false,
+    }, handlerGet);
 
+    console.log("login response: ", res);
     if (res?.error) {
       setError(res.error);
       return;
@@ -32,14 +35,14 @@ export default function LoginPage() {
         <input
           type="email"
           placeholder="Email"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border text-black rounded"
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border text-black rounded"
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />
