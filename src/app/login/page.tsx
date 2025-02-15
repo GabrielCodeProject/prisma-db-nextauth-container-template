@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { GET as handlerGet} from "@/app/api/auth/[...nextauth]/route";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -12,17 +11,36 @@ export default function LoginPage() {
     setError("");
     debugger;
 
-    const res = await signIn("credentials", {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    }, handlerGet);
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
     console.log("login response: ", res);
-    if (res?.error) {
-      setError(res.error);
+    const data = await res.json();
+    console.log("data fetch in login page: ", data);
+    if (!res?.ok) {
+      setError(data.error || "Login failed");
       return;
     }
+
+    // Then call NextAuth signIn() to create a session
+    const nextAuthRes = await signIn("credentials", {
+      email: form.email,
+      password: form.password,
+      redirect: true,
+    });
+
+    console.log("login page session signin: ", nextAuthRes);
+    if (nextAuthRes?.error) {
+      setError(nextAuthRes.error);
+      return;
+    }
+    // 🔹 Manually force a session refresh
+    const sessionRes = await fetch("/api/auth/session");
+    const sessionData = await sessionRes.json();
+    console.log("Updated Session Data:", sessionData);
 
     window.location.href = "/";
   };

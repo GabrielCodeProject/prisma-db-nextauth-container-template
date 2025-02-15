@@ -30,10 +30,8 @@ export const authOptions: NextAuthOptions = {
     strategy: "database",
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
-
   },
   providers: [
-    // Credentials provider for email & password authentication
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -45,6 +43,7 @@ export const authOptions: NextAuthOptions = {
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
+        console.log("user fetch from authoptions: ", user);
         if (user && user.password) {
           const isValid = await bcrypt.compare(
             credentials.password,
@@ -62,14 +61,14 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, user }) {
-      console.log("where are you",session)
-      console.log("where are you",user)
-      if (session.user && user.role) {
-        session.user.id = user.id;
-        session.user.role = user.role;
-      }
+      console.log("where are you", session);
+      console.log("where are you", user);
+      session.user = { ...session.user, id: user.id, role: user.role };
       return session;
     },
+  },
+  pages: {
+    signIn: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: true,
