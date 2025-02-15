@@ -37,8 +37,8 @@ export async function POST(req: Request) {
         { status: 401 }
       );
     }
-    console.log("User authenticated:", user.email);
-    console.log("user detail: ", user);
+    console.log("User authenticated in route login:", user.email);
+    console.log("user detail in route login: ", user);
 
     return NextResponse.json(
       { message: "Login successful", user },

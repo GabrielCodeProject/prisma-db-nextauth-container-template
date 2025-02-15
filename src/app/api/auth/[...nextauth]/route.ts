@@ -49,7 +49,10 @@ export const authOptions: NextAuthOptions = {
             credentials.password,
             user.password
           );
-          if (isValid) return user;
+          if (isValid) {
+            console.log("user authenticated valid in authoptions: ", user);
+            return { id: user.id, email: user.email, role: user.role };
+          }
         }
         return null;
       },

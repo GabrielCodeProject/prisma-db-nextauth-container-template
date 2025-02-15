@@ -29,7 +29,7 @@ export default function LoginPage() {
     const nextAuthRes = await signIn("credentials", {
       email: form.email,
       password: form.password,
-      redirect: true,
+      redirect: false,
     });
 
     console.log("login page session signin: ", nextAuthRes);
